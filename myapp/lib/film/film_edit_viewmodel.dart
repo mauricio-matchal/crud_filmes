@@ -26,7 +26,7 @@ class FilmEditViewModel extends _$FilmEditViewModel {
   Future<void> save() async {
     state = const AsyncValue.loading();
 
-    Film film = await future;
+    Film film = state.requireValue;
     final filmRepository = ref.read(filmRepositoryProvider);
     if (film.id == null) {
       film = await filmRepository.insert(film);

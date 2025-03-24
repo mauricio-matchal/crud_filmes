@@ -15,7 +15,7 @@ class FilmListPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final filmList = ref.watch(filmListViewModelProvider);
     return Scaffold(
-      backgroundColor: Color.fromRGBO(30, 30, 30, 1),
+      // backgroundColor: Color.fromRGBO(30, 30, 30, 1),
       appBar: AppBar(
         toolbarHeight: 140.0, //
         title: Padding(
