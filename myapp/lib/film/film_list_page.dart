@@ -15,23 +15,62 @@ class FilmListPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final filmList = ref.watch(filmListViewModelProvider);
     return Scaffold(
+      backgroundColor: Color.fromRGBO(30, 30, 30, 1),
       appBar: AppBar(
-        title: const Text('Film List'),
+        toolbarHeight: 140.0, //
+        title: Padding(
+          padding: const EdgeInsets.only(top: 60.0),
+          child: Text('@mauriciomatchal'),
+        ), //
+        backgroundColor: Color.fromRGBO(0, 0, 0, 0),
+        titleTextStyle: TextStyle(fontSize: 40.0, fontWeight: FontWeight.w900),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final saved = await Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const FilmEditPage(
-                filmId: null,
-              ),
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromARGB(153, 48, 88, 231),
+              blurRadius: 80,
+              offset: Offset(0, 4),
             ),
-          );
-          if (saved == true) {
-            _onUpdate(ref);
-          }
-        },
-        child: const Icon(Icons.add),
+          ],
+        ),
+        child: FloatingActionButton.extended(
+          onPressed: () async {
+            final saved = await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const FilmEditPage(filmId: null),
+              ),
+            );
+            if (saved == true) {
+              _onUpdate(ref);
+            }
+          },
+
+          icon: Icon(Icons.add), // Add an icon
+          label: Text(
+            "Adicionar",
+            style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500),
+          ), // Add text
+          backgroundColor: Color.fromARGB(
+            255,
+            18,
+            19,
+            22,
+          ), // Set background color
+          foregroundColor: Color.fromARGB(
+            255,
+            255,
+            255,
+            255,
+          ), // Set text/icon color
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              30,
+            ), // Pill-shaped border radius
+          ),
+        ),
       ),
       body: Center(
         child: filmList.when(
@@ -44,19 +83,14 @@ class FilmListPage extends ConsumerWidget {
   }
 
   Widget? _buildError(error, stackTrace) => Center(
-        child: Column(
-          children: [
-            Text('Error: $error'),
-            Text('Stack trace: $stackTrace'),
-          ],
-        ),
-      );
+    child: Column(
+      children: [Text('Error: $error'), Text('Stack trace: $stackTrace')],
+    ),
+  );
 
   Widget? _buildFilmList(WidgetRef ref, List<Film> list) {
     if (list.isEmpty) {
-      return const Center(
-        child: Text('No films found'),
-      );
+      return const Center(child: Text('No films found'));
     } else {
       return ListView.builder(
         itemCount: list.length,
@@ -71,27 +105,28 @@ class FilmListPage extends ConsumerWidget {
                 // create dialog
                 showDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Delete Film'),
-                    content: const Text('Are you sure?'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Cancel'),
+                  builder:
+                      (context) => AlertDialog(
+                        title: const Text('Delete Film'),
+                        content: const Text('Are you sure?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              ref
+                                  .read(filmListViewModelProvider.notifier)
+                                  .delete(film);
+                            },
+                            child: const Text('Delete'),
+                          ),
+                        ],
                       ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          ref
-                              .read(filmListViewModelProvider.notifier)
-                              .delete(film);
-                        },
-                        child: const Text('Delete'),
-                      ),
-                    ],
-                  ),
                 );
               },
             ),
