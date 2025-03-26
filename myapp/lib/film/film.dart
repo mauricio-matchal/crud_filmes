@@ -9,12 +9,17 @@ sealed class Film with _$Film {
   const factory Film({
     String? id,
     required String title,
-    @Default(false) bool isCompleted,
+    required String director,
+    double? stars,
+    String? review,
   }) = _Film;
 
   factory Film.empty() => const Film(
         id: null,
         title: '',
+        director: '',
+        stars: null,
+        review: '',
       );
 
   factory Film.fromJson(Map<String, dynamic> json) => _$FilmFromJson(json);

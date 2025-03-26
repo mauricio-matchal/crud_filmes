@@ -9,7 +9,22 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
-    const ProviderScope(child: MaterialApp(home: AuthenticationWrapper())),
+    ProviderScope(child: MaterialApp(
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: Color.fromRGBO(48, 88, 231, 1),
+        colorScheme: ColorScheme.dark(
+          primary: Color.fromRGBO(255, 201, 47, 1),
+        ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Color.fromRGBO(30, 30, 30, 1),
+          elevation: 0,
+        ),
+        scaffoldBackgroundColor: Color.fromRGBO(30, 30, 30, 1),
+      ), 
+      home: AuthenticationWrapper(),
+      )
+    ),
   );
 }
 

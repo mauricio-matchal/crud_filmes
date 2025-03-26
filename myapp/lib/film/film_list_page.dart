@@ -92,57 +92,165 @@ class FilmListPage extends ConsumerWidget {
     if (list.isEmpty) {
       return const Center(child: Text('No films found'));
     } else {
-      return ListView.builder(
-        itemCount: list.length,
-        itemBuilder: (context, index) {
+      return GridView.count(
+        crossAxisCount: 4,
+        childAspectRatio: 0.45,
+        children: List.generate(list.length, (index) {
           Film film = list[index];
-          return ListTile(
-            title: Text(film.title),
-            subtitle: Text(film.isCompleted ? 'Completed' : 'Not completed'),
-            trailing: IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
-                // create dialog
-                showDialog(
-                  context: context,
-                  builder:
-                      (context) => AlertDialog(
-                        title: const Text('Delete Film'),
-                        content: const Text('Are you sure?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              ref
-                                  .read(filmListViewModelProvider.notifier)
-                                  .delete(film);
-                            },
-                            child: const Text('Delete'),
-                          ),
-                        ],
-                      ),
-                );
-              },
+          return Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
             ),
-            onTap: () async {
-              final saved = await Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => FilmEditPage(filmId: film.id),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+                    // child: Image.network(
+                    //   // film.posterUrl,
+                    //   // fit: BoxFit.cover,
+                    // ),
+                  ),
                 ),
-              );
-              if (saved == true) {
-                _onUpdate(ref);
-              }
-            },
+                Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        film.title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        film.director,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Text(film.stars?.toStringAsFixed(1) ?? 'S'),
+                          SizedBox(width: 2),
+                          Text(film.review != '' ? 'R' : 'N'),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           );
-        },
+        }),
       );
+          // return ListTile(
+          //   title: Text(film.title),
+          //   subtitle: Text(film.isCompleted ? 'Completed' : 'Not completed'),
+          //   trailing: IconButton(
+          //     icon: const Icon(Icons.delete),
+          //     onPressed: () {
+          //       // create dialog
+          //       showDialog(
+          //         context: context,
+          //         builder:
+          //             (context) => AlertDialog(
+          //               title: const Text('Delete Film'),
+          //               content: const Text('Are you sure?'),
+          //               actions: [
+          //                 TextButton(
+          //                   onPressed: () {
+          //                     Navigator.of(context).pop();
+          //                   },
+          //                   child: const Text('Cancel'),
+          //                 ),
+          //                 TextButton(
+          //                   onPressed: () {
+          //                     Navigator.of(context).pop();
+          //                     ref
+          //                         .read(filmListViewModelProvider.notifier)
+          //                         .delete(film);
+          //                   },
+          //                   child: const Text('Delete'),
+          //                 ),
+          //               ],
+          //             ),
+          //       );
+          //     },
+          //   ),
+          //   onTap: () async {
+          //     final saved = await Navigator.of(context).push(
+          //       MaterialPageRoute(
+          //         builder: (context) => FilmEditPage(filmId: film.id),
+          //       ),
+          //     );
+          //     if (saved == true) {
+          //       _onUpdate(ref);
+          //     }
+          //   },
+          // );
     }
+  }
+}
+
+class MovieCard extends StatelessWidget {
+  final Film film;
+  
+  const MovieCard({Key? key, required this.film}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+              // child: Image.network(
+              //   // film.posterUrl,
+              //   // fit: BoxFit.cover,
+              // ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  film.title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: 4),
+                Text(
+                  film.director,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
